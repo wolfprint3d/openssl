@@ -1,11 +1,4 @@
-#! /usr/bin/env perl
-# Copyright 2012-2016 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/bin/env perl
 
 # ====================================================================
 # Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
@@ -16,7 +9,7 @@
 
 # October 2012.
 #
-# SPARCv9 VIS3 Montgomery multiplication procedure suitable for T3 and
+# SPARCv9 VIS3 Montgomery multiplicaion procedure suitable for T3 and
 # onward. There are three new instructions used here: umulxhi,
 # addxc[cc] and initializing store. On T3 RSA private key operations
 # are 1.54/1.87/2.11/2.26 times faster for 512/1024/2048/4096-bit key
@@ -25,20 +18,16 @@
 # for reference purposes, because T4 has dedicated Montgomery
 # multiplication and squaring *instructions* that deliver even more.
 
-$output = pop;
-open STDOUT,">$output";
+$bits=32;
+for (@ARGV)     { $bits=64 if (/\-m64/ || /\-xarch\=v9/); }
+if ($bits==64)  { $bias=2047; $frame=192; }
+else            { $bias=0;    $frame=112; }
 
-$frame = "STACK_FRAME";
-$bias = "STACK_BIAS";
-
-$code.=<<___;
-#include "sparc_arch.h"
-
-#ifdef	__arch64__
+$code.=<<___ if ($bits==64);
 .register	%g2,#scratch
 .register	%g3,#scratch
-#endif
-
+___
+$code.=<<___;
 .section	".text",#alloc,#execinstr
 ___
 
@@ -344,7 +333,7 @@ ___
 
 # Purpose of these subroutines is to explicitly encode VIS instructions,
 # so that one can compile the module without having to specify VIS
-# extensions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
+# extentions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
 # Idea is to reserve for option to produce "universal" binary and let
 # programmer detect if current CPU is VIS capable at run-time.
 sub unvis3 {

@@ -49,7 +49,7 @@ endif()
 add_subdirectory( crypto )
 add_subdirectory( ssl )
 if( NOT BUILD_SHARED_LIBS )
-    add_subdirectory( apps )
+    #add_subdirectory( apps )
 endif()
 
 install( FILES e_os2.h DESTINATION include/openssl )

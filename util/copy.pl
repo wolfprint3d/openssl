@@ -1,11 +1,4 @@
-#! /usr/bin/env perl
-# Copyright 2005-2016 The OpenSSL Project Authors. All Rights Reserved.
-#
-# Licensed under the OpenSSL license (the "License").  You may not use
-# this file except in compliance with the License.  You can obtain a copy
-# in the file LICENSE in the source distribution or at
-# https://www.openssl.org/source/license.html
-
+#!/usr/local/bin/perl
 
 use Fcntl;
 
@@ -26,7 +19,6 @@ foreach $arg (@ARGV) {
 		next;
 		}
 	$arg =~ s|\\|/|g;	# compensate for bug/feature in cygwin glob...
-	$arg = qq("$arg") if ($arg =~ /\s/);	# compensate for bug in 5.10...
 	foreach (glob $arg)
 		{
 		push @filelist, $_;
@@ -41,7 +33,7 @@ if ($fnum <= 1)
 	}
 
 $dest = pop @filelist;
-
+	
 if ($fnum > 2 && ! -d $dest)
 	{
 	die "Destination must be a directory";
@@ -74,5 +66,5 @@ foreach (@filelist)
 	close(OUT);
 	print "Copying: $_ to $dfile\n";
 	}
-
+		
 
