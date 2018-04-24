@@ -119,3 +119,4 @@ ms/ntdll.mak
 ms/ssleay32.def
 ms/version32.rc
 android/
+windows/
