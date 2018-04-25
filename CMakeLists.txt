@@ -46,6 +46,8 @@ if( MINGW )
   set( CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all" )
 endif()
 
+include_directories("include")
+
 add_subdirectory( crypto )
 add_subdirectory( ssl )
 if( NOT BUILD_SHARED_LIBS )
